@@ -30,6 +30,7 @@ export const serveStatic = (options: any = { root: "" }) => {
       root: options.root,
     });
     path = `/${path}`;
+    console.log("SERVESTATIC", path)
     try {
       const response = await fetch(toFileUrl(path));
       const headers = new Headers(response.headers);
