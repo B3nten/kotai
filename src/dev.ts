@@ -21,15 +21,15 @@ async function createFile(path: string, clientContent: string, serverContent: st
   Deno.writeTextFile(serverPath, serverContent);
 }
 
-function compileIsomorphic(src: string, fileName: string) {
-  const server = babel.transform(src, {
+async function compileIsomorphic(src: string, fileName: string) {
+  const server = await babel.transformAsync(src, {
     presets: [
       babelPresetTs,
       [babelPresetSolid, { generate: "ssr", hydratable: true }],
     ],
     filename: fileName,
   });
-  const client = babel.transform(src, {
+  const client = await babel.transformAsync(src, {
     presets: [
       babelPresetTs,
       [babelPresetSolid, { generate: "dom", hydratable: true }],
@@ -40,26 +40,40 @@ function compileIsomorphic(src: string, fileName: string) {
 }
 
 async function transform(sourcepath: string) {
-  try{Deno.removeSync(resolve(Deno.cwd(), "./.kotai"), { recursive: true })}catch{}
+  try{await Deno.remove(resolve(Deno.cwd(), "./.kotai"), { recursive: true })}catch{}
   for await (const e of walk(sourcepath)) {
     if (e.isFile) {
       const src = await Deno.readTextFile(e.path);
       if (!e.path.endsWith(".ts") && !e.path.endsWith(".tsx")) {
-        createFile(e.path, src, src);
+        await createFile(e.path, src, src);
         continue;
       }
-      const { server, client } = compileIsomorphic(src, e.path);
+      const { server, client } = await compileIsomorphic(src, e.path);
       if (server && client) {
         await createFile(e.path, client, server);
       }
     }
   }
+  console.log("finished compiling")
 }
 
-await transform("./src", "./.kotai");
+await transform("./src")
+let reloading = false
+let process;
 
-const p = Deno.run({
-  cmd: ["deno", "run", "-A", "./server.ts"],
-});
-
-await p.status();
+const watcher = Deno.watchFs(["."])
+for await (const w of watcher) {
+  if ((w.kind === "modify" || w.kind === "create") && !reloading) {
+    reloading = true
+    await transform("./src")
+    if(process){
+      process.close()
+    }
+    process = Deno.run({
+      cmd: ["deno", "run", "-A", "./server.ts"],
+    })
+    setTimeout(() => {
+      reloading = false
+    }, 1000)
+  }
+}

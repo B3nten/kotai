@@ -4,7 +4,7 @@ import { getNextElement as _$getNextElement } from "solid-js/web";
 import { runHydrationEvents as _$runHydrationEvents } from "solid-js/web";
 import { getNextMarker as _$getNextMarker } from "solid-js/web";
 import { insert as _$insert } from "solid-js/web";
-const _tmpl$ = /*#__PURE__*/_$template(`<div><h1>Count: <!#><!/></h1><button>Increment</button></div>`, 8);
+const _tmpl$ = /*#__PURE__*/_$template(`<div><h1>Count: <!#><!/></h1><button>Increment!!</button></div>`, 8);
 import { createSignal } from "solid-js";
 export default function App() {
   const [count, setCount] = createSignal(0);

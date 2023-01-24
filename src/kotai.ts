@@ -32,7 +32,7 @@ export class Kotai {
 	// SERVER ENTRY (DYNAMIC IMPORT)
 	serverEntry: Promise<any>;
 	// IMPORT MAP CONTENT
-	importMap: string;
+	importMap: Promise<string>
 
 	constructor(kotaiConfig: KotaiConfig) {
 		// Set config
@@ -42,7 +42,7 @@ export class Kotai {
 			resolve(Deno.cwd() + "/.kotai/server", kotaiConfig.serverEntry!)
 		);
 		// Get import map content
-		this.importMap = Deno.readTextFileSync(resolve(this.config.root! + "/importMap.json"))
+		this.importMap = Deno.readTextFile(resolve(this.config.root! + "/importMap.json"))
 
 		/*
 		 ROUTE INITALIZATION
@@ -79,7 +79,7 @@ export class Kotai {
 								(await this.serverEntry).default
 							),
 							clientEntry: this.config.clientEntry!,
-							importMap: this.importMap,
+							importMap: await this.importMap,
 							useJSX: this.config.useJSX!,
 						})
 					);
@@ -100,7 +100,7 @@ export class Kotai {
 								(await this.serverEntry).default
 							),
 							clientEntry: this.config.clientEntry!,
-							importMap: this.importMap,
+							importMap: await this.importMap,
 							useJSX: this.config.useJSX!,
 						})
 					);
