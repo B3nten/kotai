@@ -28,11 +28,13 @@ export class Kotai {
 	// HONO INSTANCE
 	hono = new Hono();
 	// CUSTOM SERVER HANDLER
-	handler: ((ctx: Context, next: Next) => Promise<Response> | Response) | null = null;
+	handler:
+		| ((ctx: Context, next: Next) => Promise<Response> | Response)
+		| null = null;
 	// SERVER ENTRY (DYNAMIC IMPORT)
 	serverEntry: Promise<any>;
 	// IMPORT MAP CONTENT
-	importMap: Promise<string>
+	importMap: Promise<string>;
 
 	constructor(kotaiConfig: KotaiConfig) {
 		// Set config
@@ -42,7 +44,9 @@ export class Kotai {
 			resolve(Deno.cwd() + "/.kotai/server", kotaiConfig.serverEntry!)
 		);
 		// Get import map content
-		this.importMap = Deno.readTextFile(resolve(this.config.root! + "/importMap.json"))
+		this.importMap = Deno.readTextFile(
+			resolve(this.config.root! + "/importMap.json")
+		);
 
 		/*
 		 ROUTE INITALIZATION
@@ -66,46 +70,28 @@ export class Kotai {
 			);
 		}
 	}
+
+	private defaultHandler = async (ctx: Context) => {
+		return ctx.html(
+			createShell({
+				body: renderToString(this.serverEntry),
+				clientEntry: this.config.clientEntry!,
+				importMap: await this.importMap,
+				useJSX: this.config.useJSX!,
+			})
+		);
+	};
+
 	// CUSTOM SERVER HANDLER
 	public fetch() {
 		// Serve the app
-		this.hono.get(
-			"*",
-			this.handler ??
-				(async (ctx) => {
-					return ctx.html(
-						createShell({
-							body: renderToString(
-								(await this.serverEntry).default
-							),
-							clientEntry: this.config.clientEntry!,
-							importMap: await this.importMap,
-							useJSX: this.config.useJSX!,
-						})
-					);
-				})
-		);
+		this.hono.get("*", this.handler ?? this.defaultHandler);
 		return this.hono.fetch;
 	}
 	// DENO SERVER HANDLER
 	public start() {
 		// Serve the app
-		this.hono.get(
-			"*",
-			this.handler ??
-				(async (ctx) => {
-					return ctx.html(
-						createShell({
-							body: renderToString(
-								(await this.serverEntry).default
-							),
-							clientEntry: this.config.clientEntry!,
-							importMap: await this.importMap,
-							useJSX: this.config.useJSX!,
-						})
-					);
-				})
-		);
+		this.hono.get("*", this.handler ?? this.defaultHandler);
 		serve(this.hono.fetch, { port: this.config.port });
 	}
 }
