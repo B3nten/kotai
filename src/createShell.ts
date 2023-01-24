@@ -12,7 +12,7 @@ export function createShell(options: createShellOptions) {
 	return `<!DOCTYPE html>
 	<html>
 		<head>
-			<title>Solideno</title>
+			<title>Kotai: Solid SSR + Deno Deploy</title>
 			<script type="importmap">
 				${options.importMap}
 			</script>
