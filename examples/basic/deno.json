@@ -1,0 +1,11 @@
+{
+	"importMap": "./importMap.json",
+	"lock": false,
+	"compilerOptions": {
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js"
+	},
+	"tasks": {
+		"dev": "deno run -A ../../src/dev.ts"
+	}
+}

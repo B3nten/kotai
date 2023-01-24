@@ -1,0 +1,8 @@
+{
+	"imports": {
+	  "solid-js": "https://esm.sh/solid-js",
+	  "solid-js/web": "https://esm.sh/solid-js/web",
+	  "kotai": "../../mod.ts"
+	}
+  }
+  
