@@ -32,7 +32,7 @@ export class Kotai {
 		| ((ctx: Context, next: Next) => Promise<Response> | Response)
 		| null = null;
 	// SERVER ENTRY (DYNAMIC IMPORT)
-	serverEntry: Promise<any>;
+	serverEntry: any
 	// IMPORT MAP CONTENT
 	importMap: Promise<string>;
 
@@ -40,9 +40,7 @@ export class Kotai {
 		// Set config
 		this.config = { ...this.config, ...kotaiConfig };
 		// dynamically import the server entry
-		this.serverEntry = import(
-			resolve(Deno.cwd() + "/.kotai/server", kotaiConfig.serverEntry!)
-		);
+		this.serverEntry = kotaiConfig.serverEntry
 		// Get import map content
 		this.importMap = Deno.readTextFile(
 			resolve(this.config.root! + "/importMap.json")
