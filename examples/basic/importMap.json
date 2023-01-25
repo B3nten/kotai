@@ -1,8 +1,9 @@
 {
 	"imports": {
 	  "solid-js": "https://esm.sh/solid-js",
-	  "solid-js/web": "https://esm.sh/solid-js/web",
-	  "kotai": "https://raw.githubusercontent.com/B3nten/kotai/main/mod.ts"
+	  "solid-js/web": "https://esm.sh/solid-js@1.6.9/web?bundle",
+	  "@solidjs/router": "https://esm.sh/@solidjs/router@0.7.0",
+	  "kotai": "../../mod.ts"
 	}
   }
   

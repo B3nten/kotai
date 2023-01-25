@@ -4,7 +4,7 @@ export {
 	renderToString,
 	hydrate,
 	render,
-} from "https://esm.sh/solid-js/web";
+} from "https://esm.sh/solid-js@1.6.9/web";
 export { serve } from "https://deno.land/std/http/server.ts";
 export {
 	extname,

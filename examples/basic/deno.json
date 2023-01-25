@@ -1,11 +1,13 @@
 {
-	"importMap": "./importMap.json",
-	"lock": false,
-	"compilerOptions": {
-		"jsx": "preserve",
-		"jsxImportSource": "solid-js"
-	},
-	"tasks": {
-		"dev": "deno run -A ../../src/dev.ts"
-	}
+  "importMap": "./importMap.json",
+  "lock": false,
+  "compilerOptions": {
+    "jsx": "preserve"
+  },
+  "tasks": {
+    "dev": "deno run -A ../../src/dev.ts",
+    "esm:add": "deno run -A https://esm.sh/v104 add",
+    "esm:update": "deno run -A https://esm.sh/v104 update",
+    "esm:remove": "deno run -A https://esm.sh/v104 remove"
+  }
 }

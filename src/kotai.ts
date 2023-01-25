@@ -5,6 +5,7 @@ import { renderToString } from "../deps.ts";
 import { createShell } from "./createShell.ts";
 import { serve } from "https://deno.land/std@0.173.0/http/server.ts";
 import { serveStatic, compiler } from "./middleware.ts";
+import h from "https://esm.sh/solid-js/h?bundle";
 
 type KotaiConfig = {
 	root?: string;
@@ -32,7 +33,7 @@ export class Kotai {
 		| ((ctx: Context, next: Next) => Promise<Response> | Response)
 		| null = null;
 	// SERVER ENTRY (DYNAMIC IMPORT)
-	serverEntry: any
+	ServerEntry: any;
 	// IMPORT MAP CONTENT
 	importMap: Promise<string>;
 
@@ -40,7 +41,7 @@ export class Kotai {
 		// Set config
 		this.config = { ...this.config, ...kotaiConfig };
 		// dynamically import the server entry
-		this.serverEntry = kotaiConfig.serverEntry
+		this.ServerEntry = kotaiConfig.serverEntry;
 		// Get import map content
 		this.importMap = Deno.readTextFile(
 			resolve(this.config.root! + "/importMap.json")
@@ -70,9 +71,10 @@ export class Kotai {
 	}
 
 	private defaultHandler = async (ctx: Context) => {
+		const ServerEntry = this.ServerEntry;
 		return ctx.html(
 			createShell({
-				body: renderToString(this.serverEntry),
+				body: renderToString(ServerEntry),
 				clientEntry: this.config.clientEntry!,
 				importMap: await this.importMap,
 				useJSX: this.config.useJSX!,
